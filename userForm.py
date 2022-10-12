@@ -17,6 +17,9 @@ def signin():
     if userName == "text" and passWrod == "text":
         session["user"]=userName
         return redirect("/member")
+    elif userName == '' or passWrod == '':
+        errorMessage = request.args.get("message","請輸入帳號密碼")
+        return render_template("error.html", error=errorMessage)
     else:
         return redirect("/error")
 
@@ -36,8 +39,5 @@ def member():
 def error():
     errorMessage = request.args.get("message","帳號或密碼輸入錯誤")
     return render_template("error.html", error=errorMessage)
-
-
-
 
 app.run(port=3000)

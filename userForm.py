@@ -13,13 +13,14 @@ def homePage():
 @app.route("/signin" ,methods=["POST"])
 def signin():
     userName = request.form["id"]
-    passWrod = request.form["password"]
-    if userName == "text" and passWrod == "text":
+    passWord = request.form["password"]
+    if userName == "text" and passWord == "text":
         session["user"]=userName
         return redirect("/member")
-    elif userName == '' or passWrod == '':
-        errorMessage = request.args.get("message","請輸入帳號密碼")
-        return render_template("error.html", error=errorMessage)
+    elif userName == '' :
+        return redirect("/error2")
+    elif passWord == '' :
+        return redirect("/error2")
     else:
         return redirect("/error")
 
@@ -37,7 +38,12 @@ def member():
 
 @app.route("/error" ,methods=["GET"])
 def error():
-    errorMessage = request.args.get("message","帳號或密碼輸入錯誤")
-    return render_template("error.html", error=errorMessage)
+        errorMessage = request.args.get("message", "帳號或密碼輸入錯誤")
+        return render_template("error.html", error=errorMessage)
+
+@app.route("/error2", methods=["GET"])
+def error2():
+    errorMessage = request.args.get("message","請輸入帳號、密碼")
+    return render_template("error2.html", error=errorMessage)
 
 app.run(port=3000)

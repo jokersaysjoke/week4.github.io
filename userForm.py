@@ -1,3 +1,4 @@
+from email import message
 from flask import Flask, request, redirect, render_template, session,url_for
 
 app=Flask(
@@ -14,16 +15,15 @@ def homePage():
 def signin():
     userName = request.form["id"]
     passWord = request.form["password"]
+        
     if userName == "text" and passWord == "text":
         session["user"]=userName
         return redirect("/member")
     elif userName == '' or passWord == '':
-        session["message"] = "請輸入帳號或密碼"
-        return redirect(url_for("error", message = "請輸入帳號或密碼"))
+        
+        return redirect("/error?message=請輸入帳號、或密碼")
     else:
-        session["message"] = "帳號或密碼錯誤"
-        return redirect(url_for("error", message = "帳號或密碼錯誤"))
-
+        return redirect("/error?message=帳號或密碼輸入錯誤")
 @app.route("/signout")
 def signout():
     session.pop("user", None)
@@ -38,7 +38,11 @@ def member():
 
 @app.route("/error" ,methods=["GET"])
 def error():
-        error = session["message"]
-        return render_template("error.html",errorMessage = error)
+    message = request.args.get("message")
+    return render_template("error.html", errorMessage = message)
+
+
+# @app.route("/square")
+# def square():
 
 app.run(port=3000)

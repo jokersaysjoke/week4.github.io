@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session
+from flask import Flask, request, redirect, render_template, session,url_for
 
 app=Flask(
     __name__,
@@ -17,12 +17,12 @@ def signin():
     if userName == "text" and passWord == "text":
         session["user"]=userName
         return redirect("/member")
-    elif userName == '' :
-        return redirect("/error2")
-    elif passWord == '' :
-        return redirect("/error2")
+    elif userName == '' or passWord == '':
+        session["message"] = "請輸入帳號或密碼"
+        return redirect(url_for("error", message = "請輸入帳號或密碼"))
     else:
-        return redirect("/error")
+        session["message"] = "帳號或密碼錯誤"
+        return redirect(url_for("error", message = "帳號或密碼錯誤"))
 
 @app.route("/signout")
 def signout():
@@ -38,12 +38,7 @@ def member():
 
 @app.route("/error" ,methods=["GET"])
 def error():
-        errorMessage = request.args.get("message", "帳號或密碼輸入錯誤")
-        return render_template("error.html", error=errorMessage)
-
-@app.route("/error2", methods=["GET"])
-def error2():
-    errorMessage = request.args.get("message","請輸入帳號、密碼")
-    return render_template("error2.html", error=errorMessage)
+        error = session["message"]
+        return render_template("error.html",errorMessage = error)
 
 app.run(port=3000)

@@ -40,8 +40,9 @@ def error():
     message = request.args.get("message")
     return render_template("error.html", errorMessage = message)
 
-
-# @app.route("/square")
-# def square():
-
+@app.route("/square")
+def square():
+    integer = request.args.get("integer")
+    integer = int(integer)**2
+    return render_template("square.html", ans = integer)
 app.run(port=3000)

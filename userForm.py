@@ -40,9 +40,17 @@ def error():
     message = request.args.get("message")
     return render_template("error.html", errorMessage = message)
 
-@app.route("/square")
-def square():
-    integer = request.args.get("integer")
+@app.route("/square/<integer>")
+def square(integer):
     integer = int(integer)**2
     return render_template("square.html", ans = integer)
+
+@app.route("/turnToSquare")
+def turnToSquare():
+    integer = request.args.get("integer")
+    if integer == "":
+        return redirect("/")
+    else:
+        return redirect(url_for("square", integer = integer ))
+
 app.run(port=3000)
